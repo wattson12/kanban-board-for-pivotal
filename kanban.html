@@ -133,9 +133,9 @@ var projects_attempts = 0;
 var labels_attempts = 0;
 var stories_attempts = 0;
 
-var token   = new URLSearchParams(window.location.search).get('token');   // need to use url pivotal.html?token=ahdtv4ti76ct476aibwt6bvaw3&label=deepblue
-var project = new URLSearchParams(window.location.search).get('project');   // need to use url pivotal.html?token=ahdtv4ti76ct476aibwt6bvaw3&label=deepblue
-var label   = new URLSearchParams(window.location.search).get('label');   // need to use url pivotal.html?token=ahdtv4ti76ct476aibwt6bvaw3
+var token   = new URLSearchParams(window.location.search).get('token');
+var project = new URLSearchParams(window.location.search).get('project');
+var label   = new URLSearchParams(window.location.search).get('label');
 
 var projects = [];
 var members = [];
@@ -255,7 +255,6 @@ function try_showing_stories () {
 function show_projects (){
 	var html = "<br><br><br>Select the project, then you can bookmark the page:</br></br>";
 	for (var i=0 ; i<projects.length ; i++){
-        //html += labels[i].name + " <a style='color:blue' href='kanban.html?token=" + token + "&label=" + labels[i].name + "'>" + labels[i].name + "</a></br>";
         html += "<a href='kanban.html?project=" + projects[i].id + "&token=" + token + "'>" + projects[i].name + "</a></br>";
     }
     html += "";
@@ -265,7 +264,6 @@ function show_projects (){
 function show_labels (){
 	var html = "<br><br><br>Select the label, then you can bookmark the page:</br></br><div class='columns'";
 	for (var i=0 ; i<labels.length ; i++){
-        //html += labels[i].name + " <a style='color:blue' href='kanban.html?token=" + token + "&label=" + labels[i].name + "'>" + labels[i].name + "</a></br>";
         html += "<a href='kanban.html?label=" + labels[i].name + "&project=" + project + "&token=" + token + "'>" + labels[i].name + "</a></br>";
     }
     html += "</div>";
