@@ -176,6 +176,7 @@ var stories_attempts = 0;
 var token   = new URLSearchParams(window.location.search).get('token');
 var project = new URLSearchParams(window.location.search).get('project');
 var label   = new URLSearchParams(window.location.search).get('label');
+var user_id = new URLSearchParams(window.location.search).get('user_id');;
 
 var projects = [];
 var members = [];
@@ -210,9 +211,8 @@ function gather_labels(){
 }
 
 function gather_projects(){
-	var url = 'https://www.pivotaltracker.com/services/v5/projects';
-	$.ajax({ url: url, beforeSend: function(xhr) { xhr.setRequestHeader('X-TrackerToken', token); } }).done(process_projects);      
-
+	$.ajax({ url: 'https://www.pivotaltracker.com/services/v5/projects', beforeSend: function(xhr) { xhr.setRequestHeader('X-TrackerToken', token); } }).done(process_projects);      
+	$.ajax({ url: 'https://www.pivotaltracker.com/services/v5/me', beforeSend: function(xhr) { xhr.setRequestHeader('X-TrackerToken', token); } }).done(process_me);  
 }
 
 function get_initials_by_id (id){
@@ -227,6 +227,12 @@ function get_initials_by_id (id){
 function process_projects (data) {
 	projects = data;
 	got_projects = true;
+}
+
+function process_me (data) {
+	user_id = Number(data["id"]);
+	console.log("Updated user ID");
+	console.log(user_id);
 }
 
 function process_members (data) {
@@ -295,7 +301,7 @@ function try_showing_stories () {
 function show_projects (){
 	var html = "<br><br><br>Select the project, then you can bookmark the page:</br></br>";
 	for (var i=0 ; i<projects.length ; i++){
-        html += "<a href='index.html?project=" + projects[i].id + "&token=" + token + "'>" + projects[i].name + "</a></br>";
+        html += "<a href='index.html?project=" + projects[i].id + "&token=" + token + "&user_id=" + user_id  + "'>" + projects[i].name + "</a></br>";
     }
     html += "";
     $('#body_area').html(html);
@@ -304,7 +310,7 @@ function show_projects (){
 function show_labels (){
 	var html = "<br><br><br>Select the label, then you can bookmark the page:</br></br><div class='columns'";
 	for (var i=0 ; i<labels.length ; i++){
-        html += "<a href='index.html?label=" + labels[i].name + "&project=" + project + "&token=" + token + "'>" + labels[i].name + "</a></br>";
+        html += "<a href='index.html?label=" + labels[i].name + "&project=" + project + "&token=" + token + "&user_id=" + user_id + "'>" + labels[i].name + "</a></br>";
     }
     html += "</div>";
     $('#body_area').html(html);
@@ -365,7 +371,8 @@ function get_story_as_htmlcard(story)
 	if (estimate_class == "points?" ){
 		estimate_class = "points1";
 	}
-	if (story.owner_ids.includes(3443000)) {
+	
+	if (story.owner_ids.includes(Number(user_id))) {
 		card_html += "<div class='" + estimate_class + " " + story.story_type + " mine'>";
 	} else {
 		card_html += "<div class='" + estimate_class + " " + story.story_type + " card'>";
