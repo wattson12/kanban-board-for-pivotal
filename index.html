@@ -48,7 +48,23 @@ You can bookmark any page you see and it will remember your settings.
 		}
 		.card a {
 			color:				#226688;
-		}    
+		}
+		.mine:hover {
+			overflow: 			visible;
+			height: 			auto;
+		}
+		.mine {
+			background-color:	#999999;
+			width:				90%;
+			padding:			8px;
+			margin:				0px 0px;
+			overflow:			hidden;
+			border:				1px #FF9800 solid;
+		}
+		.mine a {
+			color:				#226688;
+		}
+ 
 		.blank {
 			background-color:	rgba(0,0,0,0);
 			border:				1px rgba(0,0,0,0) solid;
@@ -76,10 +92,10 @@ You can bookmark any page you see and it will remember your settings.
 		}
 
 		.feature {
-			background-color:	rgba(231,248,249,0.5);
+			background-color:	#66CDAA30;
 		}
 		.chore {
-			background-color:	#eeeeee
+			background-color:	rgba(111, 107, 107, 0.5)
 
 		}
 		.bug {
@@ -302,8 +318,8 @@ function show_stories () {
 	html += "<div class='header_row'>";
 	html += "<div class='card_column'>" + "<div class='columnheader'>NOT STARTED</div><div>&nbsp;</div></div>";
 	html += "<div class='card_column'>" + "<div class='columnheader'>STARTED</div><div>&nbsp;</div></div>";
-	html += "<div class='card_column'>" + "<div class='columnheader'>FINISHED</div><div>&nbsp;</div></div>";
-	html += "<div class='card_column'>" + "<div class='columnheader'>DELIVERED</div><div>&nbsp;</div></div>";
+	html += "<div class='card_column'>" + "<div class='columnheader'>IN REVIEW</div><div>&nbsp;</div></div>";
+	html += "<div class='card_column'>" + "<div class='columnheader'>READY FOR TEST</div><div>&nbsp;</div></div>";
 	html += "<div class='card_column'>" + "<div class='columnheader'>ACCEPTED</div><div>&nbsp;</div></div>";
 	html += "</div>";
 
@@ -349,8 +365,22 @@ function get_story_as_htmlcard(story)
 	if (estimate_class == "points?" ){
 		estimate_class = "points1";
 	}
-	card_html += "<div class='card " + estimate_class + " " + story.story_type + "'>";
-	card_html += "<a target='new' href='" + story.url + "'>" + story.name.substring(0,120) + "</a></br>";
+	if (story.owner_ids.includes(3443000)) {
+		card_html += "<div class='" + estimate_class + " " + story.story_type + " mine'>";
+	} else {
+		card_html += "<div class='" + estimate_class + " " + story.story_type + " card'>";
+	}
+	
+	var emoji = ""
+	if (story.story_type == "bug") {
+		emoji = "&#128027; "
+	} else if (story.story_type == "feature") {
+		emoji = "&#128640; "
+	} else if (story.story_type == "chore") {
+		emoji = "&#x1F9F9; "
+	}
+	
+	card_html += "<a target='new' href='" + story.url + "'>" + emoji + story.name.substring(0,120) + "</a></br>";
 	for (var g=0 ; g<story.owner_ids.length ; g++){
 		card_html += " " + get_initials_by_id(story.owner_ids[g]);
 	}
